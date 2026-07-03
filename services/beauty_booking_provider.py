@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from odoo.addons.fd_booking_beauty.engines.beauty_assignment_engine import BeautyAssignmentEngine
+
 
 class BeautyBookingProvider:
     """Beauty-specific booking rules.
@@ -99,3 +101,14 @@ class BeautyBookingProvider:
                 for cabin in cabins
             ],
         }
+
+
+    def get_recommended_professional(self, beauty_service, strategy="first_available"):
+        """Return the recommended professional for a beauty service."""
+
+        beauty_service.ensure_one()
+
+        return BeautyAssignmentEngine(self.env).select_professional(
+            beauty_service,
+            strategy=strategy,
+        )
