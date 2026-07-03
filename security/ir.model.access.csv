@@ -1,1 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fd_beauty_service_user,fd.beauty.service.user,model_fd_beauty_service,base.group_user,1,1,1,1
+access_fd_beauty_employee_user,fd.beauty.employee.user,model_fd_beauty_employee,base.group_user,1,1,1,1
+access_fd_beauty_employee_service_user,fd.beauty.employee.service.user,model_fd_beauty_employee_service,base.group_user,1,1,1,1

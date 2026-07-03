@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem
-        id="menu_fd_booking_beauty_root"
-        name="Beauty Booking"
-        sequence="20"
-        web_icon="fd_booking,static/description/icon.png"/>
+    <menuitem id="menu_fd_beauty_root" name="Beauty" sequence="10"/>
 
-    <menuitem
-        id="menu_fd_booking_beauty_templates"
-        name="Beauty Services"
-        parent="menu_fd_booking_beauty_root"
-        action="fd_booking.action_fd_booking_template"
-        sequence="10"/>
+    <menuitem id="menu_fd_beauty_services"
+              name="Services"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_services"
+              sequence="10"/>
+
+    <menuitem id="menu_fd_beauty_employees"
+              name="Professionals"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_employees"
+              sequence="20"/>
+
+    <menuitem id="menu_fd_beauty_employee_services"
+              name="Service Assignments"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_employee_services"
+              sequence="30"/>
 </odoo>

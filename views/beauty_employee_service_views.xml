@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_beauty_employee_service_tree" model="ir.ui.view">
+        <field name="name">fd.beauty.employee.service.tree</field>
+        <field name="model">fd.beauty.employee.service</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="employee_id"/>
+                <field name="service_id"/>
+                <field name="duration"/>
+                <field name="price"/>
+                <field name="priority"/>
+                <field name="allow_online"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_beauty_employee_services" model="ir.actions.act_window">
+        <field name="name">Service Assignments</field>
+        <field name="res_model">fd.beauty.employee.service</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
