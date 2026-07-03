@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.fd_booking_beauty.services.beauty_booking_provider import BeautyBookingProvider
+from odoo.addons.fd_booking.services.booking_service import BookingService
 from odoo.addons.fd_booking_beauty.booking_flow.steps import (
     SelectServiceStep,
     SelectProfessionalStep,
@@ -18,6 +19,7 @@ class BeautyBookingFlow:
     def __init__(self, env):
         self.env = env
         self.provider = BeautyBookingProvider(env)
+        self.booking_service = BookingService(env)
         self.engine = FlowEngine()
 
         self.steps = [
@@ -66,7 +68,12 @@ class BeautyBookingFlow:
         for step in self.steps:
             self.engine.register(step)
 
+        
+        context = dict(context or {})
+        context["flow"] = self
+
         state = FlowState(context=context)
+
 
         self.engine.execute(state)
 
