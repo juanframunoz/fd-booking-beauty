@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_fd_booking_beauty_root"
+        name="Beauty Booking"
+        sequence="20"
+        web_icon="fd_booking,static/description/icon.png"/>
+
+    <menuitem
+        id="menu_fd_booking_beauty_templates"
+        name="Beauty Services"
+        parent="menu_fd_booking_beauty_root"
+        action="fd_booking.action_fd_booking_template"
+        sequence="10"/>
+</odoo>

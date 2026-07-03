@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="booking_type_beauty" model="fd.booking.type">
+        <field name="name">Beauty Services</field>
+        <field name="code">beauty_services</field>
+        <field name="default_duration">30</field>
+        <field name="slot_interval">30</field>
+        <field name="assignment_strategy">first_available</field>
+        <field name="allow_public_booking">1</field>
+    </record>
+
+    <record id="booking_category_hair" model="fd.booking.category">
+        <field name="name">Hair</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="booking_category_aesthetics" model="fd.booking.category">
+        <field name="name">Aesthetics</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="booking_template_haircut" model="fd.booking.template">
+        <field name="name">Haircut</field>
+        <field name="booking_type_id" ref="booking_type_beauty"/>
+        <field name="category_id" ref="booking_category_hair"/>
+        <field name="duration">30</field>
+        <field name="active">1</field>
+    </record>
+
+    <record id="booking_template_coloring" model="fd.booking.template">
+        <field name="name">Coloring</field>
+        <field name="booking_type_id" ref="booking_type_beauty"/>
+        <field name="category_id" ref="booking_category_hair"/>
+        <field name="duration">90</field>
+        <field name="active">1</field>
+    </record>
+
+    <record id="booking_template_manicure" model="fd.booking.template">
+        <field name="name">Manicure</field>
+        <field name="booking_type_id" ref="booking_type_beauty"/>
+        <field name="category_id" ref="booking_category_aesthetics"/>
+        <field name="duration">45</field>
+        <field name="active">1</field>
+    </record>
+
+    <record id="booking_template_facial" model="fd.booking.template">
+        <field name="name">Facial Treatment</field>
+        <field name="booking_type_id" ref="booking_type_beauty"/>
+        <field name="category_id" ref="booking_category_aesthetics"/>
+        <field name="duration">60</field>
+        <field name="active">1</field>
+    </record>
+
+</odoo>
