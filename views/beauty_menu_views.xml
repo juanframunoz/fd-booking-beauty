@@ -19,4 +19,11 @@
               parent="menu_fd_beauty_root"
               action="action_beauty_employee_services"
               sequence="30"/>
+
+    <menuitem id="menu_fd_beauty_cabins"
+              name="Cabins"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_cabins"
+              sequence="40"/>
+
 </odoo>

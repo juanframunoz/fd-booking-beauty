@@ -16,6 +16,7 @@
         "views/beauty_service_views.xml",   # <-- AÑADIR ESTA LÍNEA
         "views/beauty_employee_views.xml",
         "views/beauty_employee_service_views.xml",
+        "views/beauty_cabin_views.xml",
         "views/beauty_menu_views.xml",
     ],
     "installable": True,
