@@ -55,3 +55,47 @@ class BeautyBookingProvider:
         ], limit=1)
 
         return assignment.price if assignment and assignment.price else beauty_service.list_price
+
+
+    def get_service_options(self, beauty_service):
+        """Return service options prepared for website/API usage."""
+
+        beauty_service.ensure_one()
+
+        professionals = self.get_available_professionals(beauty_service)
+        cabins = self.get_allowed_cabins(beauty_service)
+        template = self.get_booking_template(beauty_service)
+
+        return {
+            "service_id": beauty_service.id,
+            "service_name": beauty_service.name,
+            "template_id": template.id if template else False,
+            "template_name": template.name if template else False,
+            "duration": beauty_service.duration,
+            "price": beauty_service.list_price,
+            "professionals": [
+                {
+                    "id": employee.id,
+                    "name": employee.name,
+                    "resource_id": employee.resource_id.id,
+                    "duration": self.get_duration_for_employee(
+                        beauty_service,
+                        employee,
+                    ),
+                    "price": self.get_price_for_employee(
+                        beauty_service,
+                        employee,
+                    ),
+                }
+                for employee in professionals
+            ],
+            "cabins": [
+                {
+                    "id": cabin.id,
+                    "name": cabin.name,
+                    "resource_id": cabin.booking_resource_id.id,
+                    "cleaning_time": cabin.cleaning_time,
+                }
+                for cabin in cabins
+            ],
+        }
