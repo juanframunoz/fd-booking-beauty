@@ -26,4 +26,11 @@
               action="action_beauty_cabins"
               sequence="40"/>
 
+
+    <menuitem id="menu_fd_beauty_create_booking"
+              name="Create Booking"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_booking_wizard"
+              sequence="5"/>
+
 </odoo>
