@@ -1,0 +1,1 @@
+from .beauty_assignment_engine import BeautyAssignmentEngine
