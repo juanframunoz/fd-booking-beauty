@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
-class BeautyAssignmentEngine:
-    """
-    Assignment engine for Beauty vertical.
+from .assignment import (
+    FirstAvailableStrategy,
+    PriorityStrategy,
+)
 
-    Responsible for selecting the professional that will
-    perform a booking according to the configured strategy.
-    """
+
+class BeautyAssignmentEngine:
+
+    STRATEGIES = {
+        "first_available": FirstAvailableStrategy,
+        "priority": PriorityStrategy,
+    }
 
     def __init__(self, env):
         self.env = env
@@ -16,6 +21,7 @@ class BeautyAssignmentEngine:
         beauty_service,
         strategy="first_available",
     ):
+
         assignments = self.env["fd.beauty.employee.service"].search(
             [
                 ("service_id", "=", beauty_service.id),
@@ -23,19 +29,12 @@ class BeautyAssignmentEngine:
                 ("allow_online", "=", True),
                 ("employee_id.active", "=", True),
             ],
-            order="priority asc, sequence asc, id asc",
+            order="priority,sequence,id",
         )
 
-        if not assignments:
-            return self.env["fd.beauty.employee"]
+        strategy_cls = self.STRATEGIES.get(
+            strategy,
+            FirstAvailableStrategy,
+        )
 
-        if strategy == "manual":
-            return self.env["fd.beauty.employee"]
-
-        if strategy == "first_available":
-            return assignments[0].employee_id
-
-        if strategy == "priority":
-            return assignments[0].employee_id
-
-        return assignments[0].employee_id
+        return strategy_cls(self.env).execute(assignments)
