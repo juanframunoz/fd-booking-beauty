@@ -60,6 +60,11 @@ class BeautyService(models.Model):
 
 
 
+    cabin_ids = fields.Many2many(
+        "fd.beauty.cabin",
+        string="Allowed Cabins",
+    )
+
     product_ids = fields.Many2many(
         "product.product",
         string="Products",
