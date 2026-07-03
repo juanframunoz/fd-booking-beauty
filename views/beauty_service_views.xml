@@ -71,7 +71,7 @@
 
                         <page string="Professionals">
 
-                            <field name="employee_ids"/>
+                            <field name="employee_service_ids"/>
 
                         </page>
 

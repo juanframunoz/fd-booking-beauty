@@ -58,10 +58,7 @@ class BeautyService(models.Model):
 
     description = fields.Html()
 
-    employee_ids = fields.Many2many(
-        "fd.booking.resource",
-        string="Professionals",
-    )
+
 
     product_ids = fields.Many2many(
         "product.product",
