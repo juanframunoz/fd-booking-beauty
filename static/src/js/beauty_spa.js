@@ -143,23 +143,28 @@ class BeautySPA {
     }
 
     renderHeader(title, subtitle) {
+        const steps = ["service", "professional", "calendar", "time", "customer", "confirm"];
+        const labels = {
+            service: "Service",
+            professional: "Professional",
+            calendar: "Date",
+            time: "Time",
+            customer: "Details",
+            confirm: "Confirm",
+        };
+        const index = Math.max(steps.indexOf(this.step), 0);
+        const progress = ((index + 1) / steps.length) * 100;
+
         return `
-            <div class="fd-beauty-header text-center mb-4">
+            <div class="fd-beauty-header text-center">
                 <h1>${title}</h1>
-                <p class="text-muted">${subtitle || ""}</p>
+                <p class="text-muted mb-0">${subtitle || ""}</p>
             </div>
-            <div class="fd-beauty-stepper mb-4">
-                <span class="${this.step === "service" ? "fw-bold" : ""}">Service</span>
-                <span> → </span>
-                <span class="${this.step === "professional" ? "fw-bold" : ""}">Professional</span>
-                <span> → </span>
-                <span class="${this.step === "calendar" ? "fw-bold" : ""}">Date</span>
-                <span> → </span>
-                <span class="${this.step === "time" ? "fw-bold" : ""}">Time</span>
-                <span> → </span>
-                <span class="${this.step === "customer" ? "fw-bold" : ""}">Customer</span>
-                <span> → </span>
-                <span class="${this.step === "confirm" ? "fw-bold" : ""}">Confirm</span>
+            <div class="fd-beauty-progress">
+                <div class="fd-beauty-progress-bar" style="width:${progress}%"></div>
+            </div>
+            <div class="fd-beauty-step-label">
+                Step ${index + 1} of ${steps.length} · ${labels[this.step]}
             </div>
         `;
     }
@@ -186,14 +191,14 @@ class BeautySPA {
 
     renderService() {
         if (this.state.loading) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Book your appointment", "Loading services...")}
                 <div class="alert alert-light border">Loading...</div>
-            `;
+            </div>`;
             return;
         }
 
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Book your appointment", "Choose a service below")}
             <div class="fd-beauty-service-list">
                 ${this.state.services.map((service) => `
@@ -210,10 +215,10 @@ class BeautySPA {
                     </button>
                 `).join("")}
             </div>
-        `;
+        </div>`;
 
         this.app.querySelectorAll(".beauty-service-card").forEach((item) => {
-            item.addEventListener("click", () => {
+            item.addEventListener("click", async () => {
                 this.state.serviceId = parseInt(item.dataset.serviceId);
                 this.state.serviceName = item.dataset.serviceName;
                 await this.loadServiceDetail(this.state.serviceId);
@@ -224,16 +229,16 @@ class BeautySPA {
 
     renderProfessional() {
         if (this.state.loading) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Choose professional", "Loading professionals...")}
                 <div class="alert alert-light border">Loading...</div>
-            `;
+            </div>`;
             return;
         }
 
         const professionals = this.state.serviceDetail?.professionals || [];
 
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Choose professional", this.state.serviceName)}
             <div class="d-grid gap-2">
                 <button class="fd-card w-100 text-start p-3 beauty-professional-card"
@@ -258,10 +263,10 @@ class BeautySPA {
                 `).join("")}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_service">Back</button>
-        `;
+        </div>`;
 
         this.app.querySelectorAll(".beauty-professional-card").forEach((item) => {
-            item.addEventListener("click", () => {
+            item.addEventListener("click", async () => {
                 this.state.professionalId = item.dataset.professionalId
                     ? parseInt(item.dataset.professionalId)
                     : null;
@@ -278,14 +283,14 @@ class BeautySPA {
 
     renderCalendar() {
         if (this.state.loading) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Choose date", "Loading available days...")}
                 <div class="alert alert-light border">Loading...</div>
-            `;
+            </div>`;
             return;
         }
 
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Choose date", this.state.serviceName)}
             <div class="d-grid gap-2">
                 ${this.state.availableDays.map((day) => `
@@ -297,10 +302,10 @@ class BeautySPA {
                 `).join("") || '<div class="alert alert-warning">No available days found.</div>'}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_professional">Back</button>
-        `;
+        </div>`;
 
         this.app.querySelectorAll(".beauty-day-card").forEach((button) => {
-            button.addEventListener("click", () => {
+            button.addEventListener("click", async () => {
                 this.state.day = button.dataset.day;
                 await this.loadAvailableTimes();
                 this.next("time");
@@ -314,10 +319,10 @@ class BeautySPA {
 
     renderTime() {
         if (this.state.loading) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Choose time", "Loading available times...")}
                 <div class="alert alert-light border">Loading...</div>
-            `;
+            </div>`;
             return;
         }
 
@@ -329,7 +334,7 @@ class BeautySPA {
             });
         };
 
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Choose time", this.state.day)}
             <div class="d-grid gap-2">
                 ${this.state.availableTimes.map((slot) => `
@@ -341,7 +346,7 @@ class BeautySPA {
                 `).join("") || '<div class="alert alert-warning">No available times found.</div>'}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_calendar">Back</button>
-        `;
+        </div>`;
 
         this.app.querySelectorAll(".beauty-slot").forEach((button) => {
             button.addEventListener("click", () => {
@@ -359,7 +364,7 @@ class BeautySPA {
     }
 
     renderCustomer() {
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Your details", "Almost done")}
             <div class="mb-3">
                 <input class="form-control" id="beauty_customer_name" placeholder="Name"/>
@@ -372,7 +377,7 @@ class BeautySPA {
             </div>
             <button class="btn btn-primary" id="beauty_customer_continue">Continue</button>
             <button class="btn btn-link" id="beauty_back_time">Back</button>
-        `;
+        </div>`;
 
         this.app.querySelector("#beauty_customer_continue").addEventListener("click", () => {
             this.state.customer = {
@@ -408,25 +413,25 @@ class BeautySPA {
 
     renderConfirm() {
         if (this.state.loading) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Confirm booking", "Creating booking...")}
                 <div class="alert alert-light border">Creating booking...</div>
-            `;
+            </div>`;
             return;
         }
 
         if (this.state.bookingResult?.success) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Booking confirmed", "Your appointment has been created")}
                 <div class="alert alert-success">
                     Booking confirmed: <strong>${this.state.bookingResult.booking_name}</strong>
                 </div>
-            `;
+            </div>`;
             return;
         }
 
         if (this.state.bookingResult && !this.state.bookingResult.success) {
-            this.app.innerHTML = `
+            this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
                 ${this.renderHeader("Booking error", "Please review your booking")}
                 <div class="alert alert-danger">
                     ${(this.state.bookingResult.errors || []).join("<br/>")}
@@ -439,7 +444,7 @@ class BeautySPA {
             return;
         }
 
-        this.app.innerHTML = `
+        this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader("Confirm booking", "Review your appointment")}
             <div class="card">
                 <div class="card-body">
@@ -452,7 +457,7 @@ class BeautySPA {
             </div>
             <button class="btn btn-success mt-3" id="beauty_create_booking">Confirm booking</button>
             <button class="btn btn-link mt-3" id="beauty_back_customer">Back</button>
-        `;
+        </div>`;
 
         this.app.querySelector("#beauty_create_booking").addEventListener("click", () => {
             this.createBooking();
