@@ -19,6 +19,7 @@ class BeautySPA {
             availableDays: [],
             availableTimes: [],
             loading: false,
+            bookingResult: null,
         };
 
         this.step = "service";
@@ -387,7 +388,57 @@ class BeautySPA {
         });
     }
 
+    async createBooking() {
+        this.state.loading = true;
+        this.render();
+
+        const result = await this.rpc("/beauty/api/booking", {
+            service_id: this.state.serviceId,
+            start: this.state.slot.start,
+            end: this.state.slot.end,
+            employee_id: this.state.professionalId || false,
+            customer: this.state.customer,
+        });
+
+        this.state.bookingResult = result;
+        this.state.loading = false;
+
+        this.render();
+    }
+
     renderConfirm() {
+        if (this.state.loading) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Confirm booking", "Creating booking...")}
+                <div class="alert alert-light border">Creating booking...</div>
+            `;
+            return;
+        }
+
+        if (this.state.bookingResult?.success) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Booking confirmed", "Your appointment has been created")}
+                <div class="alert alert-success">
+                    Booking confirmed: <strong>${this.state.bookingResult.booking_name}</strong>
+                </div>
+            `;
+            return;
+        }
+
+        if (this.state.bookingResult && !this.state.bookingResult.success) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Booking error", "Please review your booking")}
+                <div class="alert alert-danger">
+                    ${(this.state.bookingResult.errors || []).join("<br/>")}
+                </div>
+                <button class="btn btn-link mt-3" id="beauty_back_customer">Back</button>
+            `;
+            this.app.querySelector("#beauty_back_customer").addEventListener("click", () => {
+                this.back("customer");
+            });
+            return;
+        }
+
         this.app.innerHTML = `
             ${this.renderHeader("Confirm booking", "Review your appointment")}
             <div class="card">
@@ -399,9 +450,13 @@ class BeautySPA {
                     <p><strong>Customer:</strong> ${this.state.customer.name || ""}</p>
                 </div>
             </div>
-            <button class="btn btn-success mt-3" disabled>Create booking soon</button>
+            <button class="btn btn-success mt-3" id="beauty_create_booking">Confirm booking</button>
             <button class="btn btn-link mt-3" id="beauty_back_customer">Back</button>
         `;
+
+        this.app.querySelector("#beauty_create_booking").addEventListener("click", () => {
+            this.createBooking();
+        });
 
         this.app.querySelector("#beauty_back_customer").addEventListener("click", () => {
             this.back("customer");
