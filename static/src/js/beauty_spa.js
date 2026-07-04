@@ -16,6 +16,7 @@ class BeautySPA {
             services: [],
             serviceDetail: null,
             recommendedProfessional: null,
+            availableDays: [],
             loading: false,
         };
 
@@ -70,6 +71,30 @@ class BeautySPA {
 
         this.state.serviceDetail = result.service || null;
         this.state.recommendedProfessional = result.recommended_professional || null;
+
+        this.state.loading = false;
+    }
+
+    async loadAvailableDays() {
+        this.state.loading = true;
+        this.render();
+
+        const today = new Date();
+        const dateFrom = today.toISOString().slice(0, 10);
+
+        const dateToObj = new Date(today);
+        dateToObj.setDate(dateToObj.getDate() + 30);
+        const dateTo = dateToObj.toISOString().slice(0, 10);
+
+        const result = await this.rpc(
+            `/beauty/api/service/${this.state.serviceId}/days`,
+            {
+                date_from: dateFrom,
+                date_to: dateTo,
+            }
+        );
+
+        this.state.availableDays = (result.days || []).filter((day) => day.available);
 
         this.state.loading = false;
     }
@@ -222,6 +247,7 @@ class BeautySPA {
                     ? parseInt(item.dataset.professionalId)
                     : null;
                 this.state.professionalName = item.dataset.professionalName;
+                await this.loadAvailableDays();
                 this.next("calendar");
             });
         });
@@ -232,20 +258,33 @@ class BeautySPA {
     }
 
     renderCalendar() {
-        const today = new Date().toISOString().slice(0, 10);
+        if (this.state.loading) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Choose date", "Loading available days...")}
+                <div class="alert alert-light border">Loading...</div>
+            `;
+            return;
+        }
 
         this.app.innerHTML = `
             ${this.renderHeader("Choose date", this.state.serviceName)}
-            <input type="date" class="form-control" id="beauty_day" value="${today}"/>
-            <div class="mt-3">
-                <button class="btn btn-primary" id="beauty_select_day">Continue</button>
-                <button class="btn btn-link" id="beauty_back_professional">Back</button>
+            <div class="d-grid gap-2">
+                ${this.state.availableDays.map((day) => `
+                    <button class="fd-card w-100 text-start p-3 beauty-day-card"
+                            data-day="${day.date}">
+                        <strong>${day.date}</strong>
+                        <div class="text-muted small">${day.slot_count || 0} available slots</div>
+                    </button>
+                `).join("") || '<div class="alert alert-warning">No available days found.</div>'}
             </div>
+            <button class="btn btn-link mt-3" id="beauty_back_professional">Back</button>
         `;
 
-        this.app.querySelector("#beauty_select_day").addEventListener("click", () => {
-            this.state.day = this.app.querySelector("#beauty_day").value;
-            this.next("time");
+        this.app.querySelectorAll(".beauty-day-card").forEach((button) => {
+            button.addEventListener("click", () => {
+                this.state.day = button.dataset.day;
+                this.next("time");
+            });
         });
 
         this.app.querySelector("#beauty_back_professional").addEventListener("click", () => {
