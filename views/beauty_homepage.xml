@@ -5,7 +5,7 @@
 
         <t t-call="website.layout">
 
-            <div class="container mt-5"><div id="beauty_app"></div>
+            <div class="container mt-5"><div id="beauty_app" class="fd-beauty-app"></div>
 
                 <h1>Beauty Booking</h1>
 
@@ -37,7 +37,7 @@
         </t>
 
     
-<script type="module" src="/fd_booking_beauty/static/src/js/beauty_spa.js"></script>
+
 
     </template>
 

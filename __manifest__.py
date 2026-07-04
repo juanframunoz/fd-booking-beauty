@@ -10,6 +10,12 @@
     "depends": [
         "fd_booking",
     ],
+    "assets": {
+        "web.assets_frontend": [
+            "fd_booking_beauty/static/src/js/beauty_spa.js",
+            "fd_booking_beauty/static/src/scss/beauty.scss",
+        ],
+    },
     "data": [
         "security/ir.model.access.csv",
         "data/beauty_demo_data.xml",
