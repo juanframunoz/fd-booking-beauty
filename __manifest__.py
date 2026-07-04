@@ -19,6 +19,7 @@
         "views/beauty_cabin_views.xml",
         "wizard/beauty_booking_wizard_views.xml",
         "views/beauty_menu_views.xml",
+        "views/beauty_homepage.xml",
     ],
     "installable": True,
     "application": True,
