@@ -1,1 +1,2 @@
-from . import beauty_booking_provider
+from .beauty_booking_provider import BeautyBookingProvider
+from .beauty_public_api import BeautyPublicAPI
