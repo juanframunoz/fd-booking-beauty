@@ -3,3 +3,4 @@ access_fd_beauty_service_user,fd.beauty.service.user,model_fd_beauty_service,bas
 access_fd_beauty_employee_user,fd.beauty.employee.user,model_fd_beauty_employee,base.group_user,1,1,1,1
 access_fd_beauty_employee_service_user,fd.beauty.employee.service.user,model_fd_beauty_employee_service,base.group_user,1,1,1,1
 access_fd_beauty_cabin_user,fd.beauty.cabin.user,model_fd_beauty_cabin,base.group_user,1,1,1,1
+access_fd_beauty_booking_wizard,fd.beauty.booking.wizard,model_fd_beauty_booking_wizard,base.group_user,1,1,1,1
