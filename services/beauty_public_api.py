@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime
+
+from odoo.addons.fd_booking.services.booking_service import BookingService
 from odoo.addons.fd_booking_beauty.booking_flow.flow import BeautyBookingFlow
 
 
@@ -32,13 +35,7 @@ class BeautyPublicAPI:
                 else False,
         }
 
-
     def get_available_days(self, service_id, date_from, date_to):
-        """Return available days for a beauty service.
-
-        Contract prepared for the public website.
-        """
-
         service = self.env["fd.beauty.service"].browse(service_id)
 
         if not service.exists():
@@ -69,8 +66,6 @@ class BeautyPublicAPI:
         }
 
     def get_available_times(self, service_id, target_date, employee_id=False):
-        """Return available times for a beauty service and date."""
-
         service = self.env["fd.beauty.service"].browse(service_id)
 
         if not service.exists():
@@ -106,17 +101,55 @@ class BeautyPublicAPI:
             ],
         }
 
-    def create_booking(self, payload):
-        """Create a beauty booking.
+    def create_booking(
+        self,
+        service_id,
+        start,
+        end,
+        customer,
+        employee_id=False,
+    ):
+        service = self.env["fd.beauty.service"].sudo().browse(service_id)
 
-        Contract placeholder. Real booking creation will be implemented
-        through BeautyBookingFlow and BookingService.
-        """
+        if not service.exists():
+            return {
+                "success": False,
+                "errors": ["Service not found."],
+                "booking_id": False,
+            }
+
+        customer = customer or {}
+
+        partner = self.env["res.partner"].sudo().create({
+            "name": customer.get("name") or "Beauty Customer",
+            "email": customer.get("email") or False,
+            "phone": customer.get("phone") or False,
+        })
+
+        resource = None
+
+        if employee_id:
+            employee = self.env["fd.beauty.employee"].sudo().browse(employee_id)
+            if employee.exists():
+                resource = employee.resource_id
+
+        booking = BookingService(self.env).create_booking(
+            booking_type=service.booking_template_id.booking_type_id,
+            booking_template=service.booking_template_id,
+            partner=partner,
+            resource=resource,
+            start_datetime=datetime.fromisoformat(start),
+            end_datetime=datetime.fromisoformat(end),
+            values={
+                "name": service.name,
+                "source": "website",
+            },
+        )
 
         return {
-            "success": False,
-            "errors": ["Booking creation is not implemented yet."],
-            "booking_id": False,
-            "calendar_event_id": False,
-            "portal_url": False,
+            "success": True,
+            "errors": [],
+            "booking_id": booking.id,
+            "booking_name": booking.name,
+            "partner_id": partner.id,
         }

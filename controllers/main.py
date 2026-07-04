@@ -48,6 +48,34 @@ class BeautyPublicController(http.Controller):
 
 
 
+
+
+    @http.route(
+        "/beauty/api/booking",
+        type="json",
+        auth="public",
+        website=True,
+    )
+    def beauty_api_booking(
+        self,
+        service_id,
+        start,
+        end,
+        customer,
+        employee_id=False,
+    ):
+
+        api = BeautyPublicAPI(request.env)
+
+        return api.create_booking(
+            service_id=service_id,
+            start=start,
+            end=end,
+            customer=customer,
+            employee_id=employee_id,
+        )
+
+
     @http.route(
         "/beauty/api/service/<int:service_id>/times",
         type="json",
