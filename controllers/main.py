@@ -47,6 +47,26 @@ class BeautyPublicController(http.Controller):
 
 
 
+
+    @http.route(
+        "/beauty/api/service/<int:service_id>/times",
+        type="json",
+        auth="public",
+        website=True,
+    )
+    def beauty_api_service_times(self, service_id, target_date, employee_id=False):
+
+        from datetime import datetime
+
+        api = BeautyPublicAPI(request.env)
+
+        return api.get_available_times(
+            service_id,
+            datetime.strptime(target_date, "%Y-%m-%d").date(),
+            employee_id=employee_id,
+        )
+
+
     @http.route(
         "/beauty/api/service/<int:service_id>/days",
         type="json",

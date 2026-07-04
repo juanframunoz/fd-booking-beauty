@@ -17,6 +17,7 @@ class BeautySPA {
             serviceDetail: null,
             recommendedProfessional: null,
             availableDays: [],
+            availableTimes: [],
             loading: false,
         };
 
@@ -95,6 +96,23 @@ class BeautySPA {
         );
 
         this.state.availableDays = (result.days || []).filter((day) => day.available);
+
+        this.state.loading = false;
+    }
+
+    async loadAvailableTimes() {
+        this.state.loading = true;
+        this.render();
+
+        const result = await this.rpc(
+            `/beauty/api/service/${this.state.serviceId}/times`,
+            {
+                target_date: this.state.day,
+                employee_id: this.state.professionalId || false,
+            }
+        );
+
+        this.state.availableTimes = result.times || [];
 
         this.state.loading = false;
     }
@@ -283,6 +301,7 @@ class BeautySPA {
         this.app.querySelectorAll(".beauty-day-card").forEach((button) => {
             button.addEventListener("click", () => {
                 this.state.day = button.dataset.day;
+                await this.loadAvailableTimes();
                 this.next("time");
             });
         });
@@ -293,21 +312,42 @@ class BeautySPA {
     }
 
     renderTime() {
+        if (this.state.loading) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Choose time", "Loading available times...")}
+                <div class="alert alert-light border">Loading...</div>
+            `;
+            return;
+        }
+
+        const formatTime = (isoValue) => {
+            const date = new Date(isoValue);
+            return date.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+            });
+        };
+
         this.app.innerHTML = `
             ${this.renderHeader("Choose time", this.state.day)}
             <div class="d-grid gap-2">
-                ${["09:00", "09:30", "10:00", "10:30"].map((time) => `
-                    <button class="btn btn-outline-primary beauty-slot" data-slot="${time}">
-                        ${time}
+                ${this.state.availableTimes.map((slot) => `
+                    <button class="btn btn-outline-primary beauty-slot"
+                            data-start="${slot.start}"
+                            data-end="${slot.end}">
+                        ${formatTime(slot.start)}
                     </button>
-                `).join("")}
+                `).join("") || '<div class="alert alert-warning">No available times found.</div>'}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_calendar">Back</button>
         `;
 
         this.app.querySelectorAll(".beauty-slot").forEach((button) => {
             button.addEventListener("click", () => {
-                this.state.slot = button.dataset.slot;
+                this.state.slot = {
+                    start: button.dataset.start,
+                    end: button.dataset.end,
+                };
                 this.next("customer");
             });
         });
@@ -355,7 +395,7 @@ class BeautySPA {
                     <p><strong>Service:</strong> ${this.state.serviceName}</p>
                     <p><strong>Professional:</strong> ${this.state.professionalName}</p>
                     <p><strong>Date:</strong> ${this.state.day}</p>
-                    <p><strong>Time:</strong> ${this.state.slot}</p>
+                    <p><strong>Time:</strong> ${this.state.slot?.start || ""}</p>
                     <p><strong>Customer:</strong> ${this.state.customer.name || ""}</p>
                 </div>
             </div>
