@@ -8,6 +8,24 @@ from odoo.addons.fd_booking_beauty.services.beauty_public_api import BeautyPubli
 
 class BeautyPublicController(http.Controller):
 
+
+    @http.route("/beauty/api/services", type="json", auth="public", website=True)
+    def beauty_api_services(self):
+        services = request.env["fd.beauty.service"].sudo().search(
+            [],
+            order="name"
+        )
+
+        return [
+            {
+                "id": service.id,
+                "name": service.name,
+                "duration": service.duration,
+                "price": service.list_price,
+            }
+            for service in services
+        ]
+
     @http.route(
         "/beauty",
         type="http",

@@ -13,18 +13,51 @@ class BeautySPA {
             day: null,
             slot: null,
             customer: {},
+            services: [],
+            loading: false,
         };
 
         this.step = "service";
     }
 
-    start() {
+    async start() {
         if (!this.app) {
             return;
         }
 
-        this.bindInitialServices();
+        await this.loadServices();
         this.render();
+    }
+
+    async rpc(route, params = {}) {
+        const response = await fetch(route, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                jsonrpc: "2.0",
+                method: "call",
+                params: params,
+            }),
+        });
+
+        const payload = await response.json();
+
+        if (payload.error) {
+            throw payload.error;
+        }
+
+        return payload.result;
+    }
+
+    async loadServices() {
+        this.state.loading = true;
+        this.render();
+
+        this.state.services = await this.rpc("/beauty/api/services");
+
+        this.state.loading = false;
     }
 
     bindInitialServices() {
@@ -94,14 +127,40 @@ class BeautySPA {
     }
 
     renderService() {
+        if (this.state.loading) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Book your appointment", "Loading services...")}
+                <div class="alert alert-light border">Loading...</div>
+            `;
+            return;
+        }
+
         this.app.innerHTML = `
             ${this.renderHeader("Book your appointment", "Choose a service below")}
-            <div class="alert alert-light border">
-                Select one of the services listed below.
+            <div class="fd-beauty-service-list">
+                ${this.state.services.map((service) => `
+                    <button class="fd-card beauty-service-card w-100 text-start p-3 mb-3"
+                            data-service-id="${service.id}"
+                            data-service-name="${service.name}">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>${service.name}</strong>
+                                <div class="text-muted small">${service.duration || 0} min</div>
+                            </div>
+                            <strong>${service.price || 0} €</strong>
+                        </div>
+                    </button>
+                `).join("")}
             </div>
         `;
 
-        this.bindInitialServices();
+        this.app.querySelectorAll(".beauty-service-card").forEach((item) => {
+            item.addEventListener("click", () => {
+                this.state.serviceId = parseInt(item.dataset.serviceId);
+                this.state.serviceName = item.dataset.serviceName;
+                this.next("professional");
+            });
+        });
     }
 
     renderProfessional() {
