@@ -1,45 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="beauty_homepage" name="Beauty Homepage">
-
         <t t-call="website.layout">
-
-            <div class="container mt-5"><div id="beauty_app" class="fd-beauty-app"></div>
-
-                <h1>Beauty Booking</h1>
-
-                <div class="list-group mt-4">
-
-                    <t t-foreach="services" t-as="service">
-
-                        <a
-                            href="#"
-                            class="list-group-item list-group-item-action beauty-service"
-                            t-att-data-id="service.id">
-
-                            <strong>
-                                <t t-esc="service.name"/>
-                            </strong>
-
-                            <span class="float-end">
-                                <t t-esc="service.list_price"/> €
-                            </span>
-
-                        </a>
-
-                    </t>
-
-                </div>
-
+            <t t-set="title" t-value="page_title"/>
+            <script type="application/json" id="fd_beauty_i18n"><t t-out="translations_json"/></script>
+            <div class="container mt-5">
+                <div id="beauty_app" class="fd-beauty-app"></div>
             </div>
-
         </t>
-
-    
-
-
     </template>
-
-
 </odoo>

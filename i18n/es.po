@@ -1,0 +1,679 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fd_booking_beauty
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20260305\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-04 11:52+0000\n"
+"PO-Revision-Date: 2026-07-04 11:52+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_needaction
+msgid "Action Needed"
+msgstr "Acción necesaria"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__active
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__active
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__active
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__active
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_search
+msgid "Active"
+msgstr "Activo"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_ids
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_state
+msgid "Activity State"
+msgstr "Estado de actividad"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_type_icon
+msgid "Activity Type Icon"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:fd.booking.category,name:fd_booking_beauty.booking_category_aesthetics
+msgid "Aesthetics"
+msgstr "Estética"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__allow_online
+msgid "Allow Online"
+msgstr "Permitir online"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__allow_online
+msgid "Allow Online Booking"
+msgstr "Permitir reserva online"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__cabin_ids
+msgid "Allowed Cabins"
+msgstr "Cabinas permitidas"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_root
+msgid "Beauty"
+msgstr "Belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.model,name:fd_booking_beauty.model_fd_beauty_booking_wizard
+msgid "Beauty Booking Wizard"
+msgstr "Asistente de reserva de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.model,name:fd_booking_beauty.model_fd_beauty_cabin
+msgid "Beauty Cabin"
+msgstr "Cabina de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.actions.act_window,name:fd_booking_beauty.action_beauty_cabins
+msgid "Beauty Cabins"
+msgstr "Cabinas de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.model,name:fd_booking_beauty.model_fd_beauty_employee_service
+msgid "Beauty Employee Service"
+msgstr "Servicio por profesional"
+
+#. module: fd_booking_beauty
+#: model:ir.model,name:fd_booking_beauty.model_fd_beauty_employee
+msgid "Beauty Professional"
+msgstr "Profesional de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.actions.act_window,name:fd_booking_beauty.action_beauty_employees
+msgid "Beauty Professionals"
+msgstr "Profesionales de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.model,name:fd_booking_beauty.model_fd_beauty_service
+msgid "Beauty Service"
+msgstr "Servicio de belleza"
+
+#. module: fd_booking_beauty
+#: model:fd.booking.type,name:fd_booking_beauty.booking_type_beauty
+#: model:ir.actions.act_window,name:fd_booking_beauty.action_beauty_services
+msgid "Beauty Services"
+msgstr "Servicios de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__booking_date
+msgid "Booking Date"
+msgstr "Fecha de reserva"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__booking_resource_id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__resource_id
+msgid "Booking Resource"
+msgstr "Recurso de reserva"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__booking_template_id
+msgid "Booking Template"
+msgstr "Plantilla de reserva"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__booking_count
+msgid "Bookings"
+msgstr "Reservas"
+
+#. module: fd_booking_beauty
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_cabins
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_form
+msgid "Cabins"
+msgstr "Cabinas"
+
+#. module: fd_booking_beauty
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_booking_wizard_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__capacity
+msgid "Capacity"
+msgstr "Capacidad"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__category_id
+msgid "Category"
+msgstr "Categoría"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__cleaning_time
+msgid "Cleaning Time"
+msgstr "Tiempo de limpieza"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__cleanup_time
+msgid "Cleanup Time"
+msgstr "Tiempo posterior"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__code
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__code
+msgid "Code"
+msgstr "Código"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__color
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__color
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__color
+msgid "Color"
+msgstr "Color"
+
+#. module: fd_booking_beauty
+#: model:fd.booking.template,name:fd_booking_beauty.booking_template_coloring
+msgid "Coloring"
+msgstr "Coloración"
+
+#. module: fd_booking_beauty
+#: model:ir.actions.act_window,name:fd_booking_beauty.action_beauty_booking_wizard
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_booking_wizard_form
+msgid "Create Beauty Booking"
+msgstr "Crear reserva de belleza"
+
+#. module: fd_booking_beauty
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_create_booking
+msgid "Create Booking"
+msgstr "Crear reserva"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__create_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__create_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__create_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__create_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__create_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__create_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__create_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__create_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__partner_id
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__description
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_form
+msgid "Description"
+msgstr "Descripción"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__display_name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__display_name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__display_name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__display_name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__duration
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__duration
+msgid "Duration"
+msgstr "Duración"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__duration
+msgid "Duration (min)"
+msgstr "Duración (min)"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__employee_id
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__employee_count
+msgid "Employee Count"
+msgstr "Número de empleados"
+
+#. module: fd_booking_beauty
+#: model:fd.booking.template,name:fd_booking_beauty.booking_template_facial
+msgid "Facial Treatment"
+msgstr "Tratamiento facial"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:fd.booking.category,name:fd_booking_beauty.booking_category_hair
+msgid "Hair"
+msgstr "Peluquería"
+
+#. module: fd_booking_beauty
+#: model:fd.booking.template,name:fd_booking_beauty.booking_template_haircut
+msgid "Haircut"
+msgstr "Corte de pelo"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__booking_time
+msgid "Hour"
+msgstr "Hora"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__id
+msgid "ID"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_exception_icon
+msgid "Icon"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__message_has_error
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__image_1920
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__image_1920
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__image_1920
+msgid "Image 1920"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__write_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__write_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__write_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__write_uid
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__write_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__write_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__write_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__write_date
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_employee_service__priority
+msgid "Lower value = preferred professional."
+msgstr "Un valor menor indica un profesional preferente."
+
+#. module: fd_booking_beauty
+#: model:fd.booking.template,name:fd_booking_beauty.booking_template_manicure
+msgid "Manicure"
+msgstr "Manicura"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__duration
+msgid "Minutes"
+msgstr "Minutos"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_cabin__cleaning_time
+msgid "Minutes after each booking."
+msgstr "Minutos después de cada reserva."
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__name
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__name
+msgid "Name"
+msgstr "Nombre"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__notes
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__notes
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__notes
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_cabin_form
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_employee_form
+msgid "Notes"
+msgstr "Notas"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_search
+msgid "Online"
+msgstr "Online"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__preparation_time
+msgid "Preparation Time"
+msgstr "Tiempo de preparación"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__price
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__price
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__list_price
+msgid "Price"
+msgstr "Precio"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__priority
+msgid "Priority"
+msgstr "Prioridad"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__product_ids
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_form
+msgid "Products"
+msgstr "Productos"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__employee_id
+msgid "Professional"
+msgstr "Profesional"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__employee_service_ids
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_employees
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_service_form
+msgid "Professionals"
+msgstr "Profesionales"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_cabin__sequence
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__sequence
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__sequence
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_booking_wizard__service_id
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee_service__service_id
+msgid "Service"
+msgstr "Servicio"
+
+#. module: fd_booking_beauty
+#: model:ir.actions.act_window,name:fd_booking_beauty.action_beauty_employee_services
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_employee_services
+msgid "Service Assignments"
+msgstr "Asignaciones de servicio"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__service_count
+msgid "Service Count"
+msgstr "Número de servicios"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_employee__employee_service_ids
+#: model:ir.ui.menu,name:fd_booking_beauty.menu_fd_beauty_services
+#: model_terms:ir.ui.view,arch_db:fd_booking_beauty.view_beauty_employee_form
+msgid "Services"
+msgstr "Servicios"
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,field_description:fd_booking_beauty.field_fd_beauty_service__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: fd_booking_beauty
+#: model:ir.model.fields,help:fd_booking_beauty.field_fd_beauty_service__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: fd_booking_beauty
+msgid "Any professional"
+msgstr "Sin preferencia"
+
+#. module: fd_booking_beauty
+msgid "Step"
+msgstr "Paso"
+
+#. module: fd_booking_beauty
+msgid "of"
+msgstr "de"
+
+#. module: fd_booking_beauty
+msgid "Book your appointment"
+msgstr "Reserva tu cita"
+
+#. module: fd_booking_beauty
+msgid "Loading services..."
+msgstr "Cargando servicios..."
+
+#. module: fd_booking_beauty
+msgid "Choose a service below"
+msgstr "Elige un servicio"
+
+#. module: fd_booking_beauty
+msgid "Loading..."
+msgstr "Cargando..."
+
+#. module: fd_booking_beauty
+msgid "Choose professional"
+msgstr "Elige profesional"
+
+#. module: fd_booking_beauty
+msgid "Loading professionals..."
+msgstr "Cargando profesionales..."
+
+#. module: fd_booking_beauty
+msgid "Recommended if you want the first available option"
+msgstr "Te asignaremos la primera opción disponible"
+
+#. module: fd_booking_beauty
+msgid "Back"
+msgstr "Volver"
+
+#. module: fd_booking_beauty
+msgid "Choose date"
+msgstr "Elige fecha"
+
+#. module: fd_booking_beauty
+msgid "Loading available days..."
+msgstr "Cargando días disponibles..."
+
+#. module: fd_booking_beauty
+msgid "available slots"
+msgstr "huecos disponibles"
+
+#. module: fd_booking_beauty
+msgid "No available days found."
+msgstr "No hay días disponibles."
+
+#. module: fd_booking_beauty
+msgid "Choose time"
+msgstr "Elige hora"
+
+#. module: fd_booking_beauty
+msgid "Loading available times..."
+msgstr "Cargando horas disponibles..."
+
+#. module: fd_booking_beauty
+msgid "No available times found."
+msgstr "No hay horas disponibles."
+
+#. module: fd_booking_beauty
+msgid "Your details"
+msgstr "Tus datos"
+
+#. module: fd_booking_beauty
+msgid "Almost done"
+msgstr "Ya casi está"
+
+#. module: fd_booking_beauty
+msgid "Continue"
+msgstr "Continuar"
+
+#. module: fd_booking_beauty
+msgid "Confirm booking"
+msgstr "Confirmar reserva"
+
+#. module: fd_booking_beauty
+msgid "Creating booking..."
+msgstr "Creando reserva..."
+
+#. module: fd_booking_beauty
+msgid "Booking confirmed"
+msgstr "Reserva confirmada"
+
+#. module: fd_booking_beauty
+msgid "Your appointment has been created"
+msgstr "Tu cita se ha creado correctamente"
+
+#. module: fd_booking_beauty
+msgid "Booking error"
+msgstr "Error en la reserva"
+
+#. module: fd_booking_beauty
+msgid "Please review your booking"
+msgstr "Revisa los datos de la reserva"
+
+#. module: fd_booking_beauty
+msgid "Review your appointment"
+msgstr "Revisa tu cita"
+
+#. module: fd_booking_beauty
+msgid "Beauty appointments"
+msgstr "Reservas de belleza"
