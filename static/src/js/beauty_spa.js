@@ -14,6 +14,8 @@ class BeautySPA {
             slot: null,
             customer: {},
             services: [],
+            serviceDetail: null,
+            recommendedProfessional: null,
             loading: false,
         };
 
@@ -56,6 +58,18 @@ class BeautySPA {
         this.render();
 
         this.state.services = await this.rpc("/beauty/api/services");
+
+        this.state.loading = false;
+    }
+
+    async loadServiceDetail(serviceId) {
+        this.state.loading = true;
+        this.render();
+
+        const result = await this.rpc(`/beauty/api/service/${serviceId}`);
+
+        this.state.serviceDetail = result.service || null;
+        this.state.recommendedProfessional = result.recommended_professional || null;
 
         this.state.loading = false;
     }
@@ -158,26 +172,58 @@ class BeautySPA {
             item.addEventListener("click", () => {
                 this.state.serviceId = parseInt(item.dataset.serviceId);
                 this.state.serviceName = item.dataset.serviceName;
+                await this.loadServiceDetail(this.state.serviceId);
                 this.next("professional");
             });
         });
     }
 
     renderProfessional() {
+        if (this.state.loading) {
+            this.app.innerHTML = `
+                ${this.renderHeader("Choose professional", "Loading professionals...")}
+                <div class="alert alert-light border">Loading...</div>
+            `;
+            return;
+        }
+
+        const professionals = this.state.serviceDetail?.professionals || [];
+
         this.app.innerHTML = `
             ${this.renderHeader("Choose professional", this.state.serviceName)}
-            <div class="list-group">
-                <button class="list-group-item list-group-item-action" data-professional-id="">
-                    Any professional
+            <div class="d-grid gap-2">
+                <button class="fd-card w-100 text-start p-3 beauty-professional-card"
+                        data-professional-id=""
+                        data-professional-name="Any professional">
+                    <strong>Any professional</strong>
+                    <div class="text-muted small">Recommended if you want the first available option</div>
                 </button>
+
+                ${professionals.map((professional) => `
+                    <button class="fd-card w-100 text-start p-3 beauty-professional-card"
+                            data-professional-id="${professional.id}"
+                            data-professional-name="${professional.name}">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>${professional.name}</strong>
+                                <div class="text-muted small">${professional.duration || 0} min</div>
+                            </div>
+                            <strong>${professional.price || 0} €</strong>
+                        </div>
+                    </button>
+                `).join("")}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_service">Back</button>
         `;
 
-        this.app.querySelector("[data-professional-id]").addEventListener("click", () => {
-            this.state.professionalId = null;
-            this.state.professionalName = "Any professional";
-            this.next("calendar");
+        this.app.querySelectorAll(".beauty-professional-card").forEach((item) => {
+            item.addEventListener("click", () => {
+                this.state.professionalId = item.dataset.professionalId
+                    ? parseInt(item.dataset.professionalId)
+                    : null;
+                this.state.professionalName = item.dataset.professionalName;
+                this.next("calendar");
+            });
         });
 
         this.app.querySelector("#beauty_back_service").addEventListener("click", () => {
