@@ -1,20 +1,44 @@
 /** @odoo-module **/
 
 class BeautySPA {
-
     constructor() {
+        this.app = document.getElementById("beauty_app");
 
         this.state = {
-            service: null,
-            professional: null,
+            serviceId: null,
+            serviceName: null,
+            serviceData: null,
+            professionalId: null,
+            professionalName: "Any professional",
             day: null,
             slot: null,
             customer: {},
         };
 
         this.step = "service";
+    }
 
-        console.log("Beauty SPA ready");
+    start() {
+        if (!this.app) {
+            return;
+        }
+
+        this.bindInitialServices();
+        this.render();
+    }
+
+    bindInitialServices() {
+        document.querySelectorAll(".beauty-service").forEach((item) => {
+            item.addEventListener("click", (event) => {
+                event.preventDefault();
+
+                this.state.serviceId = parseInt(item.dataset.id);
+                this.state.serviceName = item.querySelector("strong")?.innerText || "Service";
+
+                this.step = "professional";
+                this.render();
+            });
+        });
     }
 
     next(step) {
@@ -22,27 +46,186 @@ class BeautySPA {
         this.render();
     }
 
+    back(step) {
+        this.step = step;
+        this.render();
+    }
+
+    renderHeader(title, subtitle) {
+        return `
+            <div class="fd-beauty-header text-center mb-4">
+                <h1>${title}</h1>
+                <p class="text-muted">${subtitle || ""}</p>
+            </div>
+            <div class="fd-beauty-stepper mb-4">
+                <span class="${this.step === "service" ? "fw-bold" : ""}">Service</span>
+                <span> → </span>
+                <span class="${this.step === "professional" ? "fw-bold" : ""}">Professional</span>
+                <span> → </span>
+                <span class="${this.step === "calendar" ? "fw-bold" : ""}">Date</span>
+                <span> → </span>
+                <span class="${this.step === "time" ? "fw-bold" : ""}">Time</span>
+                <span> → </span>
+                <span class="${this.step === "customer" ? "fw-bold" : ""}">Customer</span>
+                <span> → </span>
+                <span class="${this.step === "confirm" ? "fw-bold" : ""}">Confirm</span>
+            </div>
+        `;
+    }
+
     render() {
-
-        const el = document.getElementById("beauty_app");
-
-        if (!el) {
+        if (!this.app) {
             return;
         }
 
-        el.innerHTML = `
-            <div class="alert alert-info">
-                Current step:
-                <strong>${this.step}</strong>
+        if (this.step === "service") {
+            this.renderService();
+        } else if (this.step === "professional") {
+            this.renderProfessional();
+        } else if (this.step === "calendar") {
+            this.renderCalendar();
+        } else if (this.step === "time") {
+            this.renderTime();
+        } else if (this.step === "customer") {
+            this.renderCustomer();
+        } else if (this.step === "confirm") {
+            this.renderConfirm();
+        }
+    }
+
+    renderService() {
+        this.app.innerHTML = `
+            ${this.renderHeader("Book your appointment", "Choose a service below")}
+            <div class="alert alert-light border">
+                Select one of the services listed below.
             </div>
         `;
+
+        this.bindInitialServices();
+    }
+
+    renderProfessional() {
+        this.app.innerHTML = `
+            ${this.renderHeader("Choose professional", this.state.serviceName)}
+            <div class="list-group">
+                <button class="list-group-item list-group-item-action" data-professional-id="">
+                    Any professional
+                </button>
+            </div>
+            <button class="btn btn-link mt-3" id="beauty_back_service">Back</button>
+        `;
+
+        this.app.querySelector("[data-professional-id]").addEventListener("click", () => {
+            this.state.professionalId = null;
+            this.state.professionalName = "Any professional";
+            this.next("calendar");
+        });
+
+        this.app.querySelector("#beauty_back_service").addEventListener("click", () => {
+            this.back("service");
+        });
+    }
+
+    renderCalendar() {
+        const today = new Date().toISOString().slice(0, 10);
+
+        this.app.innerHTML = `
+            ${this.renderHeader("Choose date", this.state.serviceName)}
+            <input type="date" class="form-control" id="beauty_day" value="${today}"/>
+            <div class="mt-3">
+                <button class="btn btn-primary" id="beauty_select_day">Continue</button>
+                <button class="btn btn-link" id="beauty_back_professional">Back</button>
+            </div>
+        `;
+
+        this.app.querySelector("#beauty_select_day").addEventListener("click", () => {
+            this.state.day = this.app.querySelector("#beauty_day").value;
+            this.next("time");
+        });
+
+        this.app.querySelector("#beauty_back_professional").addEventListener("click", () => {
+            this.back("professional");
+        });
+    }
+
+    renderTime() {
+        this.app.innerHTML = `
+            ${this.renderHeader("Choose time", this.state.day)}
+            <div class="d-grid gap-2">
+                ${["09:00", "09:30", "10:00", "10:30"].map((time) => `
+                    <button class="btn btn-outline-primary beauty-slot" data-slot="${time}">
+                        ${time}
+                    </button>
+                `).join("")}
+            </div>
+            <button class="btn btn-link mt-3" id="beauty_back_calendar">Back</button>
+        `;
+
+        this.app.querySelectorAll(".beauty-slot").forEach((button) => {
+            button.addEventListener("click", () => {
+                this.state.slot = button.dataset.slot;
+                this.next("customer");
+            });
+        });
+
+        this.app.querySelector("#beauty_back_calendar").addEventListener("click", () => {
+            this.back("calendar");
+        });
+    }
+
+    renderCustomer() {
+        this.app.innerHTML = `
+            ${this.renderHeader("Your details", "Almost done")}
+            <div class="mb-3">
+                <input class="form-control" id="beauty_customer_name" placeholder="Name"/>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" id="beauty_customer_email" placeholder="Email"/>
+            </div>
+            <div class="mb-3">
+                <input class="form-control" id="beauty_customer_phone" placeholder="Phone"/>
+            </div>
+            <button class="btn btn-primary" id="beauty_customer_continue">Continue</button>
+            <button class="btn btn-link" id="beauty_back_time">Back</button>
+        `;
+
+        this.app.querySelector("#beauty_customer_continue").addEventListener("click", () => {
+            this.state.customer = {
+                name: this.app.querySelector("#beauty_customer_name").value,
+                email: this.app.querySelector("#beauty_customer_email").value,
+                phone: this.app.querySelector("#beauty_customer_phone").value,
+            };
+            this.next("confirm");
+        });
+
+        this.app.querySelector("#beauty_back_time").addEventListener("click", () => {
+            this.back("time");
+        });
+    }
+
+    renderConfirm() {
+        this.app.innerHTML = `
+            ${this.renderHeader("Confirm booking", "Review your appointment")}
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Service:</strong> ${this.state.serviceName}</p>
+                    <p><strong>Professional:</strong> ${this.state.professionalName}</p>
+                    <p><strong>Date:</strong> ${this.state.day}</p>
+                    <p><strong>Time:</strong> ${this.state.slot}</p>
+                    <p><strong>Customer:</strong> ${this.state.customer.name || ""}</p>
+                </div>
+            </div>
+            <button class="btn btn-success mt-3" disabled>Create booking soon</button>
+            <button class="btn btn-link mt-3" id="beauty_back_customer">Back</button>
+        `;
+
+        this.app.querySelector("#beauty_back_customer").addEventListener("click", () => {
+            this.back("customer");
+        });
     }
 }
 
 window.addEventListener("load", () => {
-
     window.BeautySPA = new BeautySPA();
-
-    BeautySPA.render();
-
+    window.BeautySPA.start();
 });
