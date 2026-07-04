@@ -72,6 +72,22 @@ class BeautyBookingFlow:
         context = dict(context or {})
         context["flow"] = self
 
+        service_id = context.get("service_id")
+
+        if service_id:
+            service = self.env["fd.beauty.service"].browse(service_id)
+
+            if service.exists():
+                context["service"] = service
+                context["booking_template"] = service.booking_template_id
+                context["booking_type"] = service.booking_template_id.booking_type_id
+
+                context["provider_data"] = self.provider.get_service_options(service)
+
+                context["recommended_professional"] = (
+                    self.provider.get_recommended_professional(service)
+                )
+
         state = FlowState(context=context)
 
 
