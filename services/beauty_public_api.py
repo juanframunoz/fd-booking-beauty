@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo.addons.fd_booking.services.booking_service import BookingService
 from odoo.addons.fd_booking_beauty.booking_flow.flow import BeautyBookingFlow
@@ -11,6 +11,37 @@ class BeautyPublicAPI:
     def __init__(self, env):
         self.env = env
         self.flow = BeautyBookingFlow(env)
+
+
+    def _get_services_from_ids(self, service_ids):
+        service_ids = service_ids or []
+        services = self.env["fd.beauty.service"].sudo().browse(service_ids).exists()
+        ordered = self.env["fd.beauty.service"]
+        for service_id in service_ids:
+            service = services.filtered(lambda item: item.id == service_id)
+            if service:
+                ordered |= service[:1]
+        return ordered
+
+    def get_services_summary(self, service_ids):
+        services = self._get_services_from_ids(service_ids)
+
+        if not services:
+            return {
+                "success": False,
+                "errors": ["No services selected."],
+                "summary": {},
+            }
+
+        templates = services.mapped("booking_template_id")
+        summary = BookingService(self.env).calculate_template_summary(templates)
+
+        return {
+            "success": True,
+            "errors": [],
+            "service_ids": services.ids,
+            "summary": summary,
+        }
 
     def get_service(self, service_id):
 
@@ -35,8 +66,9 @@ class BeautyPublicAPI:
                 else False,
         }
 
-    def get_available_days(self, service_id, date_from, date_to):
-        service = self.env["fd.beauty.service"].browse(service_id)
+    def get_available_days(self, service_id, date_from, date_to, service_ids=None):
+        selected_services = self._get_services_from_ids(service_ids) if service_ids else self.env["fd.beauty.service"]
+        service = selected_services[:1] if selected_services else self.env["fd.beauty.service"].browse(service_id)
 
         if not service.exists():
             return {
@@ -45,11 +77,16 @@ class BeautyPublicAPI:
                 "days": [],
             }
 
+        templates = selected_services.mapped("booking_template_id") if selected_services else service.booking_template_id
+        summary = BookingService(self.env).calculate_template_summary(templates)
+        duration_minutes = summary.get("effective_duration") or service.booking_template_id.duration
+
         calendar = self.flow.booking_service.get_calendar(
             booking_type=service.booking_template_id.booking_type_id,
             date_from=date_from,
             date_to=date_to,
             booking_template=service.booking_template_id,
+            duration_minutes=duration_minutes,
         )
 
         return {
@@ -65,8 +102,9 @@ class BeautyPublicAPI:
             ],
         }
 
-    def get_available_times(self, service_id, target_date, employee_id=False):
-        service = self.env["fd.beauty.service"].browse(service_id)
+    def get_available_times(self, service_id, target_date, employee_id=False, service_ids=None):
+        selected_services = self._get_services_from_ids(service_ids) if service_ids else self.env["fd.beauty.service"]
+        service = selected_services[:1] if selected_services else self.env["fd.beauty.service"].browse(service_id)
 
         if not service.exists():
             return {
@@ -81,11 +119,16 @@ class BeautyPublicAPI:
             employee = self.env["fd.beauty.employee"].browse(employee_id)
             resource = employee.resource_id if employee.exists() else False
 
+        templates = selected_services.mapped("booking_template_id") if selected_services else service.booking_template_id
+        summary = BookingService(self.env).calculate_template_summary(templates)
+        duration_minutes = summary.get("effective_duration") or service.booking_template_id.duration
+
         slots = self.flow.booking_service.get_slots(
             booking_type=service.booking_template_id.booking_type_id,
             target_date=target_date,
             booking_template=service.booking_template_id,
             resource=resource,
+            duration_minutes=duration_minutes,
         )
 
         return {
@@ -108,8 +151,10 @@ class BeautyPublicAPI:
         end,
         customer,
         employee_id=False,
+        service_ids=None,
     ):
-        service = self.env["fd.beauty.service"].sudo().browse(service_id)
+        selected_services = self._get_services_from_ids(service_ids) if service_ids else self.env["fd.beauty.service"]
+        service = selected_services[:1] if selected_services else self.env["fd.beauty.service"].sudo().browse(service_id)
 
         if not service.exists():
             return {
@@ -133,18 +178,34 @@ class BeautyPublicAPI:
             if employee.exists():
                 resource = employee.resource_id
 
+        templates = selected_services.mapped("booking_template_id") if selected_services else service.booking_template_id
+        summary = BookingService(self.env).calculate_template_summary(templates)
+
+        start_dt = datetime.fromisoformat(start)
+        end_dt = start_dt + timedelta(minutes=summary.get("effective_duration") or service.booking_template_id.duration)
+
         booking = BookingService(self.env).create_booking(
             booking_type=service.booking_template_id.booking_type_id,
             booking_template=service.booking_template_id,
             partner=partner,
             resource=resource,
-            start_datetime=datetime.fromisoformat(start),
-            end_datetime=datetime.fromisoformat(end),
+            start_datetime=start_dt,
+            end_datetime=end_dt,
             values={
-                "name": service.name,
+                "name": " + ".join(selected_services.mapped("name")) if selected_services else service.name,
                 "source": "website",
             },
         )
+
+        for line in summary.get("lines", []):
+            self.env["fd.booking.line"].sudo().create({
+                "booking_id": booking.id,
+                "sequence": line["sequence"],
+                "booking_template_id": line["template_id"],
+                "name": line["name"],
+                "original_duration": line["original_duration"],
+                "price": line["price"],
+            })
 
         return {
             "success": True,

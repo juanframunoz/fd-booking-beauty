@@ -40,6 +40,8 @@ class BeautyPublicController(http.Controller):
             "Choose time": "Choose time",
             "Loading available times...": "Loading available times...",
             "No available times found.": "No available times found.",
+            "There is not enough available time for the selected services. Please choose fewer services or another professional.": "There is not enough available time for the selected services. Please choose fewer services or another professional.",
+            "There is not enough available time for the selected services. Please choose fewer services or another date.": "There is not enough available time for the selected services. Please choose fewer services or another date.",
             "Your details": "Your details",
             "Almost done": "Almost done",
             "Name": "Name",
@@ -52,6 +54,7 @@ class BeautyPublicController(http.Controller):
             "Your appointment has been created": "Your appointment has been created",
             "Booking error": "Booking error",
             "Please review your booking": "Please review your booking",
+            "Please select an available time before confirming.": "Please select an available time before confirming.",
             "Review your appointment": "Review your appointment",
             "Customer": "Customer",
             "Beauty appointments": "Beauty appointments",
@@ -82,6 +85,8 @@ class BeautyPublicController(http.Controller):
             "Choose time": "Elige hora",
             "Loading available times...": "Cargando horas disponibles...",
             "No available times found.": "No hay horas disponibles.",
+            "There is not enough available time for the selected services. Please choose fewer services or another professional.": "No hay tiempo disponible suficiente para los servicios seleccionados. Elige menos servicios u otro profesional.",
+            "There is not enough available time for the selected services. Please choose fewer services or another date.": "No hay tiempo disponible suficiente para los servicios seleccionados. Elige menos servicios u otra fecha.",
             "Your details": "Tus datos",
             "Almost done": "Ya casi está",
             "Name": "Nombre",
@@ -94,6 +99,7 @@ class BeautyPublicController(http.Controller):
             "Your appointment has been created": "Tu cita se ha creado correctamente",
             "Booking error": "Error en la reserva",
             "Please review your booking": "Revisa los datos de la reserva",
+            "Please select an available time before confirming.": "Selecciona una hora disponible antes de confirmar.",
             "Review your appointment": "Revisa tu cita",
             "Customer": "Cliente",
             "Beauty appointments": "Reservas de belleza",
@@ -280,15 +286,28 @@ class BeautyPublicController(http.Controller):
             return {**base, **pt}
         return base
 
+    @http.route("/beauty/api/services/summary", type="json", auth="public", website=True)
+    def beauty_api_services_summary(self, service_ids=None):
+        api = BeautyPublicAPI(request.env)
+        return api.get_services_summary(service_ids or [])
+
+
     @http.route("/beauty/api/services", type="json", auth="public", website=True)
     def beauty_api_services(self):
         services = request.env["fd.beauty.service"].sudo().search([], order="name")
-        return [{
-            "id": service.id,
-            "name": service.name,
-            "duration": service.duration,
-            "price": service.list_price,
-        } for service in services]
+        result = []
+        for service in services:
+            template = service.booking_template_id
+            result.append({
+                "id": service.id,
+                "name": service.name,
+                "duration": service.duration,
+                "price": service.list_price,
+                "combination_policy": template.combination_policy if template and "combination_policy" in template._fields else "combine_freely",
+                "combination_message": template.combination_message if template and "combination_message" in template._fields else "",
+                "time_optimization_percent": template.time_optimization_percent if template and "time_optimization_percent" in template._fields else 0.0,
+            })
+        return result
 
     @http.route(["/beauty", "/belleza"], type="http", auth="public", website=True)
     def beauty_home(self, **kw):
@@ -301,7 +320,7 @@ class BeautyPublicController(http.Controller):
         })
 
     @http.route("/beauty/api/booking", type="json", auth="public", website=True)
-    def beauty_api_booking(self, service_id, start, end, customer, employee_id=False):
+    def beauty_api_booking(self, service_id, start, end, customer, employee_id=False, service_ids=None):
         api = BeautyPublicAPI(request.env)
         return api.create_booking(
             service_id=service_id,
@@ -309,26 +328,29 @@ class BeautyPublicController(http.Controller):
             end=end,
             customer=customer,
             employee_id=employee_id,
+            service_ids=service_ids,
         )
 
     @http.route("/beauty/api/service/<int:service_id>/times", type="json", auth="public", website=True)
-    def beauty_api_service_times(self, service_id, target_date, employee_id=False):
+    def beauty_api_service_times(self, service_id, target_date, employee_id=False, service_ids=None):
         from datetime import datetime
         api = BeautyPublicAPI(request.env)
         return api.get_available_times(
             service_id,
             datetime.strptime(target_date, "%Y-%m-%d").date(),
             employee_id=employee_id,
+            service_ids=service_ids,
         )
 
     @http.route("/beauty/api/service/<int:service_id>/days", type="json", auth="public", website=True)
-    def beauty_api_service_days(self, service_id, date_from, date_to):
+    def beauty_api_service_days(self, service_id, date_from, date_to, service_ids=None):
         from datetime import datetime
         api = BeautyPublicAPI(request.env)
         return api.get_available_days(
             service_id,
             datetime.strptime(date_from, "%Y-%m-%d").date(),
             datetime.strptime(date_to, "%Y-%m-%d").date(),
+            service_ids=service_ids,
         )
 
     @http.route("/beauty/api/service/<int:service_id>", type="json", auth="public")

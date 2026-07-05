@@ -19,6 +19,8 @@ class BeautySPA {
             serviceId: null,
             serviceName: null,
             serviceData: null,
+            selectedServices: [],
+            combinationWarning: null,
             professionalId: null,
             professionalName: this.tr("Any professional"),
             day: null,
@@ -31,6 +33,7 @@ class BeautySPA {
             availableTimes: [],
             loading: false,
             bookingResult: null,
+            servicesSummary: null,
         };
 
         this.step = "service";
@@ -96,22 +99,28 @@ class BeautySPA {
         this.state.loading = true;
         this.render();
 
-        const today = new Date();
-        const dateFrom = today.toISOString().slice(0, 10);
+        try {
+            const today = new Date();
+            const dateFrom = today.toISOString().slice(0, 10);
 
-        const dateToObj = new Date(today);
-        dateToObj.setDate(dateToObj.getDate() + 30);
-        const dateTo = dateToObj.toISOString().slice(0, 10);
+            const dateToObj = new Date(today);
+            dateToObj.setDate(dateToObj.getDate() + 30);
+            const dateTo = dateToObj.toISOString().slice(0, 10);
 
-        const result = await this.rpc(
-            `/beauty/api/service/${this.state.serviceId}/days`,
-            {
-                date_from: dateFrom,
-                date_to: dateTo,
-            }
-        );
+            const result = await this.rpc(
+                `/beauty/api/service/${this.state.serviceId}/days`,
+                {
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    service_ids: this.getSelectedServiceIds(),
+                }
+            );
 
-        this.state.availableDays = (result.days || []).filter((day) => day.available);
+            this.state.availableDays = (result.days || []).filter((day) => day.available);
+        } catch (error) {
+            console.error(error);
+            this.state.availableDays = [];
+        }
 
         this.state.loading = false;
     }
@@ -120,15 +129,21 @@ class BeautySPA {
         this.state.loading = true;
         this.render();
 
-        const result = await this.rpc(
-            `/beauty/api/service/${this.state.serviceId}/times`,
-            {
-                target_date: this.state.day,
-                employee_id: this.state.professionalId || false,
-            }
-        );
+        try {
+            const result = await this.rpc(
+                `/beauty/api/service/${this.state.serviceId}/times`,
+                {
+                    target_date: this.state.day,
+                    employee_id: this.state.professionalId || false,
+                    service_ids: this.getSelectedServiceIds(),
+                }
+            );
 
-        this.state.availableTimes = result.times || [];
+            this.state.availableTimes = result.times || [];
+        } catch (error) {
+            console.error(error);
+            this.state.availableTimes = [];
+        }
 
         this.state.loading = false;
     }
@@ -190,6 +205,83 @@ class BeautySPA {
         }
     }
 
+    getSelectedServiceIds() {
+        return this.state.selectedServices.map((service) => service.id);
+    }
+
+    async loadServicesSummary() {
+        if (!this.state.selectedServices.length) {
+            this.state.servicesSummary = null;
+            return;
+        }
+        const result = await this.rpc("/beauty/api/services/summary", {
+            service_ids: this.getSelectedServiceIds(),
+        });
+        this.state.servicesSummary = result.summary || null;
+    }
+
+    getSelectedServicesTotalDuration() {
+        if (this.state.servicesSummary) {
+            return this.state.servicesSummary.effective_duration || 0;
+        }
+        return this.state.selectedServices.reduce((total, service) => total + (service.duration || 0), 0);
+    }
+
+    getSelectedServicesTotalPrice() {
+        return this.state.selectedServices.reduce((total, service) => total + (service.price || 0), 0);
+    }
+
+    isServiceSelected(serviceId) {
+        return this.state.selectedServices.some((service) => service.id === serviceId);
+    }
+
+    getDefaultCombinationMessage(service) {
+        return service.combination_message || this.tr("This service cannot be combined with other services. Please make a separate booking.");
+    }
+
+    toggleService(service) {
+        const selected = this.isServiceSelected(service.id);
+        if (selected) {
+            this.state.selectedServices = this.state.selectedServices.filter((item) => item.id !== service.id);
+            this.state.combinationWarning = null;
+            this.loadServicesSummary().then(() => this.renderService());
+            return;
+        }
+
+        const isExclusive = service.combination_policy === "exclusive";
+        const exclusiveSelected = this.state.selectedServices.find((item) => item.combination_policy === "exclusive");
+
+        if (isExclusive && this.state.selectedServices.length) {
+            this.state.combinationWarning = this.getDefaultCombinationMessage(service);
+            this.renderService();
+            return;
+        }
+
+        if (exclusiveSelected) {
+            this.state.combinationWarning = this.getDefaultCombinationMessage(exclusiveSelected);
+            this.renderService();
+            return;
+        }
+
+        this.state.selectedServices.push(service);
+        this.state.combinationWarning = null;
+        this.loadServicesSummary().then(() => this.renderService());
+    }
+
+    async continueWithSelectedServices() {
+        if (!this.state.selectedServices.length) {
+            return;
+        }
+
+        const firstService = this.state.selectedServices[0];
+
+        this.state.serviceId = firstService.id;
+        this.state.serviceName = this.state.selectedServices.map((service) => service.name).join(" + ");
+
+        await this.loadServiceDetail(this.state.serviceId);
+        this.next("professional");
+    }
+
     renderService() {
         if (this.state.loading) {
             this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
@@ -199,33 +291,100 @@ class BeautySPA {
             return;
         }
 
+        const selectedCount = this.state.selectedServices.length;
+        const totalDuration = this.getSelectedServicesTotalDuration();
+        const totalPrice = this.getSelectedServicesTotalPrice();
+
         this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader(this.tr("Book your appointment"), this.tr("Choose a service below"))}
             <div class="fd-beauty-service-list">
-                ${this.state.services.map((service) => `
-                    <button class="fd-card beauty-service-card w-100 text-start p-3 mb-3"
-                            data-service-id="${service.id}"
-                            data-service-name="${service.name}">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <strong>${service.name}</strong>
-                                <div class="text-muted small">${service.duration || 0} min</div>
+                ${this.state.services.map((service) => {
+                    const selected = this.isServiceSelected(service.id);
+                    return `
+                        <button class="fd-card beauty-service-card ${selected ? "beauty-service-card-selected" : ""} w-100 text-start p-3 mb-3"
+                                data-service-id="${service.id}">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                <div>
+                                    <strong>${service.name}</strong>
+                                    <div class="text-muted small">${service.duration || 0} min</div>
+                                    ${service.combination_policy === "exclusive" ? `<div class="fd-service-exclusive-badge">${this.tr("Exclusive service")}</div>` : ""}
+                                </div>
+                                <div class="text-end">
+                                    <strong>${service.price || 0} €</strong>
+                                    <div class="beauty-service-check">${selected ? "✓" : "+"}</div>
+                                </div>
                             </div>
-                            <strong>${service.price || 0} €</strong>
-                        </div>
-                    </button>
-                `).join("")}
+                        </button>
+                    `;
+                }).join("")}
             </div>
+
+            ${this.state.combinationWarning ? `
+                <div class="alert alert-warning fd-combination-warning">
+                    ${this.state.combinationWarning}
+                </div>
+            ` : ""}
+
+            ${selectedCount ? `
+                <div class="fd-service-basket">
+                    <div class="fd-service-basket-content">
+                        <div class="fd-service-basket-title">
+                            <strong>${this.tr("Your booking")}</strong>
+                            <span>${selectedCount} ${selectedCount === 1 ? this.tr("service selected") : this.tr("services selected")}</span>
+                        </div>
+
+                        <div class="fd-service-basket-lines">
+                            ${this.state.selectedServices.map((service) => `
+                                <div class="fd-service-basket-line">
+                                    <span>✓ ${service.name}</span>
+                                    <button type="button"
+                                            class="fd-service-basket-remove"
+                                            data-service-id="${service.id}"
+                                            aria-label="${this.tr("Remove service")}">
+                                        ×
+                                    </button>
+                                </div>
+                            `).join("")}
+                        </div>
+
+                        <div class="fd-service-basket-total">
+                            <span>${totalDuration} min</span>
+                            <strong>${totalPrice} €</strong>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="beauty_continue_services">
+                        ${this.tr("Continue")}
+                    </button>
+                </div>
+            ` : ""}
         </div>`;
 
         this.app.querySelectorAll(".beauty-service-card").forEach((item) => {
-            item.addEventListener("click", async () => {
-                this.state.serviceId = parseInt(item.dataset.serviceId);
-                this.state.serviceName = item.dataset.serviceName;
-                await this.loadServiceDetail(this.state.serviceId);
-                this.next("professional");
+            item.addEventListener("click", () => {
+                const serviceId = parseInt(item.dataset.serviceId);
+                const service = this.state.services.find((item) => item.id === serviceId);
+                if (service) {
+                    this.toggleService(service);
+                }
             });
         });
+
+        this.app.querySelectorAll(".fd-service-basket-remove").forEach((button) => {
+            button.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const serviceId = parseInt(button.dataset.serviceId);
+                this.state.selectedServices = this.state.selectedServices.filter((service) => service.id !== serviceId);
+                this.loadServicesSummary().then(() => this.renderService());
+            });
+        });
+
+        const continueButton = this.app.querySelector("#beauty_continue_services");
+        if (continueButton) {
+            continueButton.addEventListener("click", async () => {
+                await this.continueWithSelectedServices();
+            });
+        }
     }
 
     renderProfessional() {
@@ -335,13 +494,13 @@ class BeautySPA {
         this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader(this.tr("Choose time"), this.state.day)}
             <div class="fd-time-grid">
-                ${this.state.availableTimes.map((slot) => `
+                ${this.state.availableTimes.length ? this.state.availableTimes.map((slot) => `
                     <button class="fd-time-chip beauty-slot"
                             data-start="${slot.start}"
                             data-end="${slot.end}">
                         ${formatTime(slot.start)}
                     </button>
-                `).join("") || `<div class="alert alert-warning">${this.tr("No available times found.")}</div>`}
+                `).join("") : `<div class="alert alert-warning">${this.tr("There is not enough available time for the selected services. Please choose fewer services or another date.")}</div>`}
             </div>
             <button class="btn btn-link mt-3" id="beauty_back_calendar">${this.tr("Back")}</button>
         </div>`;
@@ -392,11 +551,21 @@ class BeautySPA {
     }
 
     async createBooking() {
+        if (!this.state.slot || !this.state.slot.start || !this.state.slot.end) {
+            this.state.bookingResult = {
+                success: false,
+                errors: [this.tr("Please select an available time before confirming.")],
+            };
+            this.render();
+            return;
+        }
+
         this.state.loading = true;
         this.render();
 
         const result = await this.rpc("/beauty/api/booking", {
             service_id: this.state.serviceId,
+            service_ids: this.getSelectedServiceIds(),
             start: this.state.slot.start,
             end: this.state.slot.end,
             employee_id: this.state.professionalId || false,
