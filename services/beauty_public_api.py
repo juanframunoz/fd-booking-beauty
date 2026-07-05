@@ -197,14 +197,22 @@ class BeautyPublicAPI:
             },
         )
 
+        service_by_template = {
+            srv.booking_template_id.id: srv
+            for srv in selected_services
+            if srv.booking_template_id
+        }
+
         for line in summary.get("lines", []):
+            beauty_service = service_by_template.get(line["template_id"])
+
             self.env["fd.booking.line"].sudo().create({
                 "booking_id": booking.id,
                 "sequence": line["sequence"],
                 "booking_template_id": line["template_id"],
-                "name": line["name"],
+                "name": beauty_service.name if beauty_service else line["name"],
                 "original_duration": line["original_duration"],
-                "price": line["price"],
+                "price": beauty_service.list_price if beauty_service else line["price"],
             })
 
         return {
