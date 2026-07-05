@@ -1,25 +1,112 @@
-.fd-beauty-app {
-    min-height: 300px;
+:root{
+    --fd-primary:#D26CA6;
+    --fd-primary-light:#FCEAF3;
 }
 
-.fd-beauty-header h1 {
-    font-weight: 700;
+.fd-beauty-app{
+    max-width:720px;
+    margin:0 auto;
+    padding:24px 12px 56px;
 }
 
-.fd-beauty-stepper {
-    padding: 0.75rem 1rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 999px;
-    text-align: center;
-    font-size: 0.9rem;
+.fd-beauty-shell{
+    background:#fff;
+    border:1px solid var(--fd-border);
+    border-radius:28px;
+    box-shadow:0 18px 55px rgba(0,0,0,.08);
+    padding:28px;
+}
+
+.fd-beauty-header h1{
+    font-weight:800;
+    letter-spacing:-.03em;
+}
+
+.fd-beauty-progress{
+    height:8px;
+    background:#f1f1f1;
+    border-radius:999px;
+    overflow:hidden;
+    margin:18px 0 8px;
+}
+
+.fd-beauty-progress-bar{
+    height:100%;
+    background:var(--fd-primary);
+    border-radius:999px;
+    transition:width .25s ease;
+}
+
+.fd-beauty-step-label{
+    font-size:.85rem;
+    color:#777;
+    text-align:center;
+    margin-bottom:24px;
+}
+
+.fd-beauty-view{
+    animation:fdBeautyFade .18s ease;
+}
+
+.fd-card,
+.beauty-service-card,
+.beauty-professional-card,
+.beauty-day-card{
+    border-radius:20px;
+    border:1px solid #eee;
+    background:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,.05);
+    transition:all .18s ease;
+}
+
+.fd-card:hover,
+.beauty-service-card:hover,
+.beauty-professional-card:hover,
+.beauty-day-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--fd-primary);
+    box-shadow:0 12px 32px rgba(210,108,166,.18);
+}
+
+.beauty-slot{
+    border-radius:16px;
+    padding:14px;
+}
+
+@keyframes fdBeautyFade{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+@media(max-width:576px){
+    .fd-beauty-shell{
+        border-radius:22px;
+        padding:20px;
+    }
+}
+
+
+.fd-time-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 10px;
+}
+
+.fd-time-chip {
+    border: 1px solid rgba(17, 24, 39, .12);
     background: #fff;
+    border-radius: 999px;
+    padding: 12px 14px;
+    font-weight: 600;
 }
 
-.fd-beauty-step {
-    margin-top: 2rem;
-}
-
-.beauty-service {
-    border-radius: 0.75rem;
-    margin-bottom: 0.75rem;
+.fd-time-chip:hover {
+    background: #111827;
+    color: #fff;
 }

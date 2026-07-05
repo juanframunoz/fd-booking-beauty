@@ -12,8 +12,10 @@
     ],
     "assets": {
         "web.assets_frontend": [
+            "fd_booking_beauty/static/src/js/fd_calendar.js",
             "fd_booking_beauty/static/src/js/beauty_spa.js",
             "fd_booking_beauty/static/src/scss/beauty.scss",
+            "fd_booking_beauty/static/src/scss/fd_calendar.scss",
         ],
     },
     "data": [

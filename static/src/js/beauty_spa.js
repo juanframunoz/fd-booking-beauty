@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { FDCalendar } from "./fd_calendar";
+
 class BeautySPA {
     constructor() {
         this.app = document.getElementById("beauty_app");
@@ -291,25 +293,22 @@ class BeautySPA {
 
         this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader(this.tr("Choose date"), this.state.serviceName)}
-            <div class="d-grid gap-2">
-                ${this.state.availableDays.map((day) => `
-                    <button class="fd-card w-100 text-start p-3 beauty-day-card"
-                            data-day="${day.date}">
-                        <strong>${day.date}</strong>
-                        <div class="text-muted small">${day.slot_count || 0} ${this.tr("available slots")}</div>
-                    </button>
-                `).join("") || `<div class="alert alert-warning">${this.tr("No available days found.")}</div>`}
-            </div>
+            <div id="beauty_calendar"></div>
             <button class="btn btn-link mt-3" id="beauty_back_professional">${this.tr("Back")}</button>
         </div>`;
 
-        this.app.querySelectorAll(".beauty-day-card").forEach((button) => {
-            button.addEventListener("click", async () => {
-                this.state.day = button.dataset.day;
+        const calendar = new FDCalendar({
+            el: this.app.querySelector("#beauty_calendar"),
+            tr: (text) => this.tr(text),
+            availableDays: this.state.availableDays,
+            selectedDate: this.state.day,
+            onSelect: async (date) => {
+                this.state.day = date;
                 await this.loadAvailableTimes();
                 this.next("time");
-            });
+            },
         });
+        calendar.render();
 
         this.app.querySelector("#beauty_back_professional").addEventListener("click", () => {
             this.back("professional");
@@ -335,9 +334,9 @@ class BeautySPA {
 
         this.app.innerHTML = `<div class="fd-beauty-shell fd-beauty-view">
             ${this.renderHeader(this.tr("Choose time"), this.state.day)}
-            <div class="d-grid gap-2">
+            <div class="fd-time-grid">
                 ${this.state.availableTimes.map((slot) => `
-                    <button class="btn btn-outline-primary beauty-slot"
+                    <button class="fd-time-chip beauty-slot"
                             data-start="${slot.start}"
                             data-end="${slot.end}">
                         ${formatTime(slot.start)}
