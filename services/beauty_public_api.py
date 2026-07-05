@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime, timedelta
+import pytz
 
 from odoo.addons.fd_booking.services.booking_service import BookingService
 from odoo.addons.fd_booking_beauty.booking_flow.flow import BeautyBookingFlow
@@ -131,14 +132,16 @@ class BeautyPublicAPI:
             duration_minutes=duration_minutes,
         )
 
+        booking_tz = pytz.timezone(service.booking_template_id.booking_type_id.timezone or "Europe/Madrid")
+
         return {
             "success": True,
             "service_id": service.id,
             "date": target_date.isoformat(),
             "times": [
                 {
-                    "start": slot["start"].isoformat(),
-                    "end": slot["end"].isoformat(),
+                    "start": pytz.UTC.localize(slot["start"]).astimezone(booking_tz).replace(tzinfo=None).isoformat(),
+                    "end": pytz.UTC.localize(slot["end"]).astimezone(booking_tz).replace(tzinfo=None).isoformat(),
                 }
                 for slot in slots
             ],
@@ -181,7 +184,9 @@ class BeautyPublicAPI:
         templates = selected_services.mapped("booking_template_id") if selected_services else service.booking_template_id
         summary = BookingService(self.env).calculate_template_summary(templates)
 
-        start_dt = datetime.fromisoformat(start)
+        booking_tz = pytz.timezone(service.booking_template_id.booking_type_id.timezone or "Europe/Madrid")
+        local_start = booking_tz.localize(datetime.fromisoformat(start).replace(tzinfo=None))
+        start_dt = local_start.astimezone(pytz.UTC).replace(tzinfo=None)
         end_dt = start_dt + timedelta(minutes=summary.get("effective_duration") or service.booking_template_id.duration)
 
         booking = BookingService(self.env).create_booking(
