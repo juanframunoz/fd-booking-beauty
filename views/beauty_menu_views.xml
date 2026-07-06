@@ -1,36 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <menuitem id="menu_fd_beauty_root" name="Beauty" sequence="10"/>
 
-    <menuitem id="menu_fd_beauty_services"
-              name="Services"
-              parent="menu_fd_beauty_root"
+    <record id="action_beauty_public_booking_url" model="ir.actions.act_url">
+        <field name="name">Haz una reserva</field>
+        <field name="url">/beauty</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_beauty_booking_calendar" model="ir.ui.view">
+        <field name="name">fd.beauty.booking.calendar</field>
+        <field name="model">fd.booking</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendario de reservas"
+                      date_start="start_datetime"
+                      date_stop="end_datetime"
+                      color="user_id">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="booking_template_id"/>
+                <field name="user_id"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_beauty_bookings" model="ir.actions.act_window">
+        <field name="name">Reservas</field>
+        <field name="res_model">fd.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_beauty_booking_calendar" model="ir.actions.act_window">
+        <field name="name">Calendario</field>
+        <field name="res_model">fd.booking</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_fd_beauty_root"
+              name="Beauty"
               action="action_beauty_services"
               sequence="10"/>
 
-    <menuitem id="menu_fd_beauty_employees"
-              name="Professionals"
+    <menuitem id="menu_fd_beauty_create_booking"
+              name="Haz una reserva"
               parent="menu_fd_beauty_root"
-              action="action_beauty_employees"
+              action="action_beauty_public_booking_url"
+              sequence="10"/>
+
+    <menuitem id="menu_fd_beauty_bookings"
+              name="Reservas"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_bookings"
               sequence="20"/>
 
-    <menuitem id="menu_fd_beauty_employee_services"
-              name="Service Assignments"
+    <menuitem id="menu_fd_beauty_calendar"
+              name="Calendario"
               parent="menu_fd_beauty_root"
-              action="action_beauty_employee_services"
+              action="action_beauty_booking_calendar"
               sequence="30"/>
 
-    <menuitem id="menu_fd_beauty_cabins"
-              name="Cabins"
+    <menuitem id="menu_fd_beauty_services"
+              name="Servicios"
               parent="menu_fd_beauty_root"
-              action="action_beauty_cabins"
+              action="action_beauty_services"
               sequence="40"/>
 
-
-    <menuitem id="menu_fd_beauty_create_booking"
-              name="Create Booking"
+    <menuitem id="menu_fd_beauty_employees"
+              name="Profesionales"
               parent="menu_fd_beauty_root"
-              action="action_beauty_booking_wizard"
-              sequence="5"/>
+              action="action_beauty_employees"
+              sequence="50"/>
+
+    <menuitem id="menu_fd_beauty_employee_services"
+              name="Asignaciones de servicios"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_employee_services"
+              sequence="60"/>
+
+    <menuitem id="menu_fd_beauty_cabins"
+              name="Cabinas"
+              parent="menu_fd_beauty_root"
+              action="action_beauty_cabins"
+              sequence="70"/>
 
 </odoo>
