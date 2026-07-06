@@ -21,7 +21,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/beauty_demo_data.xml",
-        "views/beauty_service_views.xml",   # <-- AÑADIR ESTA LÍNEA
+        "views/beauty_service_views.xml",
         "views/beauty_employee_views.xml",
         "views/beauty_employee_service_views.xml",
         "views/beauty_cabin_views.xml",
