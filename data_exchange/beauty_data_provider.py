@@ -1,37 +1,39 @@
 # -*- coding: utf-8 -*-
 
+from odoo import _
+
 from odoo.addons.fd_booking.services.data_provider import DataProvider
 from odoo.addons.fd_booking.services.data_provider_registry import DataProviderRegistry
 
 
 class BeautyDataProvider(DataProvider):
     code = "beauty"
-    name = "Beauty"
+    name = _("Beauty")
 
     def templates(self, env):
         return [
             {
                 "code": "services",
-                "name": "Beauty services",
-                "description": "Import beauty services, durations and prices.",
+                "name": _("Beauty services"),
+                "description": _("Import beauty services, durations and prices."),
                 "formats": ["xlsx", "csv"],
             },
             {
                 "code": "professionals",
-                "name": "Beauty professionals",
-                "description": "Import beauty professionals.",
+                "name": _("Beauty professionals"),
+                "description": _("Import beauty professionals."),
                 "formats": ["xlsx", "csv"],
             },
             {
                 "code": "cabins",
-                "name": "Beauty cabins",
-                "description": "Import beauty cabins.",
+                "name": _("Beauty cabins"),
+                "description": _("Import beauty cabins."),
                 "formats": ["xlsx", "csv"],
             },
             {
                 "code": "assignments",
-                "name": "Beauty assignments",
-                "description": "Import professional-service assignments.",
+                "name": _("Beauty assignments"),
+                "description": _("Import professional-service assignments."),
                 "formats": ["xlsx", "csv"],
             },
         ]
